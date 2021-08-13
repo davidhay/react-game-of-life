@@ -1,23 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { useState } from "react";
+import { findRenderedDOMComponentWithClass } from "react-dom/cjs/react-dom-test-utils.production.min";
+
+const ROWS = 50;
+const COLS = 50;
 
 function App() {
+  const [grid, setGrid] = useState(() => {
+    const rows = [];
+    for (let i = 0; i < ROWS; i++) {
+      rows.push(Array.from(Array(COLS), () => 0));
+    }
+    return rows;
+  });
+  console.log(grid);
+
+  const cellStyle = (rowIdx, colIdx) => {
+    return {
+      width: 20,
+      height: 20,
+      backgroundColor: grid[rowIdx][colIdx] ? "black" : undefined,
+      border: "solid 1px black",
+    };
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: `repeat(${COLS}, 20px)`,
+      }}
+    >
+      {grid.map((row, rowIdx) =>
+        row.map((col, colIdx) => (
+          <div
+            key={`${rowIdx}-${colIdx}`}
+            style={cellStyle(rowIdx, colIdx)}
+          ></div>
+        ))
+      )}
     </div>
   );
 }
