@@ -1,6 +1,6 @@
 import "./App.css";
 import { useState } from "react";
-import { findRenderedDOMComponentWithClass } from "react-dom/cjs/react-dom-test-utils.production.min";
+import produce from "immer";
 
 const ROWS = 50;
 const COLS = 50;
@@ -13,7 +13,6 @@ function App() {
     }
     return rows;
   });
-  console.log(grid);
 
   const cellStyle = (rowIdx, colIdx) => {
     return {
@@ -23,6 +22,7 @@ function App() {
       border: "solid 1px black",
     };
   };
+
   return (
     <div
       style={{
@@ -35,6 +35,12 @@ function App() {
           <div
             key={`${rowIdx}-${colIdx}`}
             style={cellStyle(rowIdx, colIdx)}
+            onClick={() => {
+              const newGrid = produce(grid, (gridCopy) => {
+                gridCopy[rowIdx][colIdx] = 1 - grid[rowIdx][colIdx];
+              });
+              setGrid(newGrid);
+            }}
           ></div>
         ))
       )}
